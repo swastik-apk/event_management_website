@@ -1,34 +1,36 @@
 const variantClasses = {
   primary:
-    'bg-accent-500 text-white hover:bg-accent-600 focus-visible:ring-accent-400',
+    'bg-accent-500 text-white shadow-sm hover:bg-accent-600 active:scale-[0.99] focus-visible:ring-accent-500',
   secondary:
-    'border border-line bg-surface text-ink hover:border-accent-500 hover:bg-accent-50 focus-visible:ring-accent-400 dark:border-night-700 dark:bg-night-900 dark:text-slate-100 dark:hover:border-accent-400 dark:hover:bg-night-800',
+    'border border-line-strong bg-surface text-ink hover:border-ink hover:bg-subtle active:scale-[0.99] focus-visible:ring-ink dark:border-night-700 dark:bg-night-900 dark:text-zinc-100 dark:hover:border-zinc-400 dark:hover:bg-night-800',
   ghost:
-    'text-muted hover:bg-slate-100 hover:text-ink focus-visible:ring-accent-400 dark:text-slate-300 dark:hover:bg-night-800 dark:hover:text-white',
-  dark: 'bg-ink text-white hover:bg-slate-700 focus-visible:ring-accent-400 dark:bg-slate-100 dark:text-night-950 dark:hover:bg-white',
+    'text-ink hover:bg-subtle focus-visible:ring-ink dark:text-zinc-200 dark:hover:bg-night-800 dark:hover:text-white',
+  dark: 'bg-ink text-white hover:bg-zinc-800 active:scale-[0.99] focus-visible:ring-ink dark:bg-zinc-100 dark:text-night-950 dark:hover:bg-white',
 }
 
 const sizeClasses = {
-  sm: 'min-h-10 px-3 text-sm',
-  md: 'min-h-10 px-4 text-sm',
-  lg: 'min-h-11 px-5 text-sm',
+  sm: 'min-h-10 px-4 text-sm',
+  md: 'min-h-11 px-5 text-sm',
+  lg: 'min-h-12 px-6 text-base',
 }
 
 export default function Button({
   as: Component = 'button',
   variant = 'primary',
   size = 'md',
+  pill = false,
   className = '',
   type,
   ...props
 }) {
   const componentProps = Component === 'button' ? { type: type ?? 'button' } : {}
+  const radiusClass = pill ? 'rounded-full' : 'rounded-control'
 
   return (
     <Component
       {...componentProps}
       {...props}
-      className={`inline-flex items-center justify-center gap-2 rounded-control font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      className={`inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap font-display font-semibold tracking-tight transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${radiusClass} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
     />
   )
 }

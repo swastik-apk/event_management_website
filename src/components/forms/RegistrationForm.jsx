@@ -66,7 +66,10 @@ export default function RegistrationForm({ events, selectedEventId, onSuccess })
   return (
     <form className="space-y-6" noValidate onSubmit={handleSubmit}>
       {submitError ? (
-        <div className="flex items-start gap-3 rounded-control border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200" role="alert">
+        <div
+          className="flex items-start gap-3 rounded-control border border-red-200 bg-red-50 p-3.5 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200"
+          role="alert"
+        >
           <AlertCircle className="mt-0.5 shrink-0" size={18} aria-hidden="true" />
           <p>{submitError}</p>
         </div>
@@ -115,14 +118,18 @@ export default function RegistrationForm({ events, selectedEventId, onSuccess })
         onChange={(event) => updateField('phone', event.target.value)}
       />
 
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold text-ink dark:text-slate-100" htmlFor="eventId">
-          Selected event <span className="ml-1 text-accent-600" aria-hidden="true">*</span>
+      <div className="space-y-1.5">
+        <label className="block text-sm font-medium text-ink dark:text-zinc-200" htmlFor="eventId">
+          Selected experience <span className="ml-1 text-accent-500" aria-hidden="true">*</span>
         </label>
         <select
           id="eventId"
           name="eventId"
-          className={`min-h-10 w-full rounded-control border bg-surface px-3 text-sm text-ink outline-none transition focus:border-accent-400 focus:ring-2 focus:ring-accent-100 dark:bg-night-900 dark:text-slate-100 dark:focus:border-accent-400 dark:focus:ring-accent-800 ${errors.eventId ? 'border-red-400 dark:border-red-500' : 'border-line dark:border-night-700'}`}
+          className={`min-h-12 w-full rounded-control border bg-surface px-4 text-sm text-ink outline-none transition-colors duration-150 focus:border-ink focus:ring-1 focus:ring-ink dark:bg-night-900 dark:text-zinc-100 dark:focus:border-zinc-100 dark:focus:ring-zinc-100 ${
+            errors.eventId
+              ? 'border-red-500 dark:border-red-400'
+              : 'border-line-strong dark:border-night-700'
+          }`}
           value={values.eventId}
           aria-describedby={errors.eventId ? 'eventId-error' : undefined}
           aria-invalid={Boolean(errors.eventId)}
@@ -130,20 +137,30 @@ export default function RegistrationForm({ events, selectedEventId, onSuccess })
           onChange={(event) => updateField('eventId', event.target.value)}
         >
           <option value="">Choose an event</option>
-          {events.map((event) => <option key={event.id} value={event.id}>{event.title}</option>)}
+          {events.map((event) => (
+            <option key={event.id} value={event.id}>
+              {event.title}
+            </option>
+          ))}
         </select>
-        {errors.eventId ? <p id="eventId-error" className="text-sm font-medium text-red-700 dark:text-red-300" role="alert">{errors.eventId}</p> : null}
-        <p className="text-xs leading-5 text-muted dark:text-slate-400">You can change the event before submitting if your plans change.</p>
+        {errors.eventId ? (
+          <p id="eventId-error" className="text-xs font-medium text-red-600 dark:text-red-400" role="alert">
+            {errors.eventId}
+          </p>
+        ) : null}
+        <p className="text-xs leading-5 text-muted dark:text-zinc-400">
+          You can switch the selected event here before confirming.
+        </p>
       </div>
 
-      <div className="flex items-start gap-3 rounded-control bg-canvas p-4 text-xs leading-5 text-muted dark:bg-night-800 dark:text-slate-400">
-        <LockKeyhole className="mt-0.5 shrink-0 text-accent-600 dark:text-accent-300" size={16} aria-hidden="true" />
-        <p>Your details are saved only in this browser for this local demo. No email or SMS will be sent.</p>
+      <div className="flex items-start gap-3 rounded-control bg-subtle p-4 text-xs leading-5 text-muted dark:bg-night-800 dark:text-zinc-400">
+        <LockKeyhole className="mt-0.5 shrink-0 text-accent-500" size={16} aria-hidden="true" />
+        <p>Your registration is saved locally in this browser for demonstration. No email or SMS confirmation will be sent.</p>
       </div>
 
-      <Button className="w-full sm:w-auto" type="submit" size="lg" disabled={isSubmitting}>
-        {isSubmitting ? 'Saving registration…' : 'Complete registration'}
-        {!isSubmitting ? <ArrowRight size={18} aria-hidden="true" /> : null}
+      <Button className="w-full sm:w-auto" type="submit" size="lg" pill disabled={isSubmitting}>
+        {isSubmitting ? 'Saving registration…' : 'Confirm registration'}
+        {!isSubmitting ? <ArrowRight size={17} aria-hidden="true" /> : null}
       </Button>
     </form>
   )

@@ -6,7 +6,7 @@ function pad(value) {
   return String(value).padStart(2, '0')
 }
 
-export default function Countdown({ startDate }) {
+export default function Countdown({ startDate, compact = false }) {
   const [remaining, setRemaining] = useState(() => getTimeRemaining(startDate))
 
   useEffect(() => {
@@ -19,17 +19,27 @@ export default function Countdown({ startDate }) {
 
   if (!remaining || remaining.totalSeconds <= 0) return null
 
-  return (
-    <div className="flex items-center gap-2 rounded-control border border-accent-200 bg-accent-50 px-3 py-2 dark:border-accent-800 dark:bg-accent-800/40">
-      <Clock3 className="shrink-0 text-accent-600 dark:text-accent-300" size={16} aria-hidden="true" />
-      <div>
-        <p className="text-xs font-medium text-accent-700 dark:text-accent-200">
-          Starts in
-        </p>
-        <p className="mt-0.5 text-sm font-medium text-accent-800 dark:text-accent-100" aria-live="polite">
-          {remaining.days}d {pad(remaining.hours)}h {pad(remaining.minutes)}m {pad(remaining.seconds)}s
-        </p>
+  if (compact) {
+    return (
+      <div className="inline-flex items-center gap-2 text-xs font-medium text-muted dark:text-zinc-400" aria-live="polite">
+        <Clock3 className="shrink-0 text-accent-500" size={14} aria-hidden="true" />
+        <span>Starts in</span>
+        <span className="font-mono font-semibold tabular-nums text-ink dark:text-zinc-100">
+          {remaining.days}d {pad(remaining.hours)}h {pad(remaining.minutes)}m
+        </span>
       </div>
+    )
+  }
+
+  return (
+    <div className="flex items-center justify-between gap-3 rounded-control border border-line bg-subtle px-4 py-3 dark:border-night-700 dark:bg-night-800/70">
+      <div className="flex items-center gap-2 text-xs font-medium text-muted dark:text-zinc-400">
+        <Clock3 className="shrink-0 text-accent-500" size={16} aria-hidden="true" />
+        <span>Starts in</span>
+      </div>
+      <p className="font-mono text-sm font-semibold tabular-nums text-ink dark:text-zinc-100" aria-live="polite">
+        {remaining.days}d {pad(remaining.hours)}h {pad(remaining.minutes)}m {pad(remaining.seconds)}s
+      </p>
     </div>
   )
 }

@@ -31,9 +31,9 @@ function App() {
   return (
     <ThemeProvider>
       <ScrollToTop />
-      <div className="flex min-h-screen flex-col bg-canvas dark:bg-night-950">
+      <div className="flex min-h-screen flex-col bg-canvas text-ink dark:bg-night-950 dark:text-zinc-100">
         <a
-          className="sr-only z-50 rounded-control bg-accent-500 px-4 py-3 text-sm font-medium text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+          className="sr-only z-50 rounded-full bg-accent-500 px-4 py-2.5 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
           href="#main-content"
         >
           Skip to content

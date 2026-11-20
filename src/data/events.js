@@ -1,3 +1,10 @@
+import aiSummitImg from '../assets/images/event_ai_summit_1795213224457.jpg'
+import designSystemsImg from '../assets/images/event_design_systems_1795213224479.jpg'
+import foundersForumImg from '../assets/images/event_founders_forum_1795213224489.jpg'
+import soundscapeSessionsImg from '../assets/images/event_soundscape_sessions_1795213224561.jpg'
+import climateLabImg from '../assets/images/event_climate_lab_1795213224908.jpg'
+import dataStorytellingImg from '../assets/images/event_data_storytelling_1795213224240.jpg'
+
 export const events = [
   {
     id: 'evt-ai-summit',
@@ -11,8 +18,7 @@ export const events = [
       'A practical day exploring how responsible AI is changing the way we build, work, and learn.',
     description:
       'Spend a full day with curious builders, researchers, and product thinkers unpacking the ideas behind useful AI. The programme balances accessible talks with hands-on conversations about responsible adoption, emerging tools, and the human skills that make technology matter.',
-    image:
-      'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=85',
+    image: aiSummitImg,
     organizer: 'Event Hub community team',
     registrationDeadline: '2026-12-10T23:59:00+05:30',
     featured: true,
@@ -35,8 +41,7 @@ export const events = [
       'Learn how small teams create shared language, faster workflows, and more inclusive products.',
     description:
       'This workshop is for designers and engineers who want their product experiences to feel more coherent without slowing down experimentation. Bring a real interface challenge and leave with practical methods for tokens, documentation, contribution, and governance.',
-    image:
-      'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=85',
+    image: designSystemsImg,
     organizer: 'Event Hub community team',
     registrationDeadline: '2027-01-07T23:59:00+05:30',
     featured: true,
@@ -59,8 +64,7 @@ export const events = [
       'An honest afternoon of stories and frameworks for building durable, people-first companies.',
     description:
       'A small-group forum for early-stage founders and operators who prefer substance over hype. Hear candid stories about choosing a market, finding a sustainable pace, and building teams that can do excellent work for the long term.',
-    image:
-      'https://images.unsplash.com/photo-1553484771-371a605b060b?auto=format&fit=crop&w=1200&q=85',
+    image: foundersForumImg,
     organizer: 'Event Hub community team',
     registrationDeadline: '2026-12-17T23:59:00+05:30',
     featured: true,
@@ -83,8 +87,7 @@ export const events = [
       'A relaxed evening of independent sounds, collaborative sets, and new voices from the local scene.',
     description:
       'Soundscape Sessions brings together three distinct acts for an evening that moves from intimate acoustic arrangements to expansive electronic textures. Come early for the listening lounge and stay for a set built live with the audience in the room.',
-    image:
-      'https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1200&q=85',
+    image: soundscapeSessionsImg,
     organizer: 'Event Hub community team',
     registrationDeadline: '2027-01-15T23:59:00+05:30',
     agenda: [
@@ -106,8 +109,7 @@ export const events = [
       'Turn local climate concerns into collaborative, practical experiments with your community.',
     description:
       'The Climate Solutions Lab is a hands-on day for residents, students, civic groups, and makers. Work in small teams to understand a local challenge, map the people affected, and prototype an action that could be tested within the next 30 days.',
-    image:
-      'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=85',
+    image: climateLabImg,
     organizer: 'Event Hub community team',
     registrationDeadline: '2027-02-04T23:59:00+05:30',
     agenda: [
@@ -129,8 +131,7 @@ export const events = [
       'Build clearer narratives from complex information with a guided, beginner-friendly studio session.',
     description:
       'Good data stories help people make better decisions. In this live online studio, you will practise choosing a meaningful question, finding the signal in a dataset, and shaping a visual narrative that is honest, memorable, and useful to its audience.',
-    image:
-      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=85',
+    image: dataStorytellingImg,
     organizer: 'Event Hub community team',
     registrationDeadline: '2027-02-19T23:59:00+05:30',
     agenda: [
@@ -143,6 +144,8 @@ export const events = [
 ]
 
 export const categories = [...new Set(events.map((event) => event.category))]
+
+export const formats = [...new Set(events.map((event) => event.format))]
 
 export function getEventById(eventId) {
   return events.find((event) => event.id === eventId)

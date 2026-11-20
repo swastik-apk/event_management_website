@@ -45,6 +45,10 @@ export function getRegistrations() {
   return readRecords(getBrowserStorage())
 }
 
+export function getRegistrationsByEventId(eventId) {
+  return getRegistrations().filter((record) => record?.eventId === eventId)
+}
+
 export function saveRegistration(registration) {
   const storage = getBrowserStorage()
   if (!storage) throw new StorageError()
@@ -65,5 +69,43 @@ export function saveRegistration(registration) {
     return registration
   } catch {
     throw new StorageError()
+  }
+}
+
+export function removeRegistration(target) {
+  const storage = getBrowserStorage()
+  if (!storage) {
+    throw new StorageError('Your registration could not be updated in this browser.')
+  }
+
+  const existing = readRecords(storage)
+  const targetId = typeof target === 'string' ? target : target?.registrationId
+
+  let removed = false
+  const next = existing.filter((record) => {
+    if (removed) return true
+
+    const matchesById = targetId && record?.registrationId === targetId
+    const matchesByComposite =
+      !targetId &&
+      typeof target === 'object' &&
+      target !== null &&
+      record?.eventId === target.eventId &&
+      record?.registeredAt === target.registeredAt &&
+      record?.email === target.email
+
+    if (matchesById || matchesByComposite) {
+      removed = true
+      return false
+    }
+
+    return true
+  })
+
+  try {
+    storage.setItem(REGISTRATIONS_KEY, JSON.stringify(next))
+    return next
+  } catch {
+    throw new StorageError('Your registration could not be updated in this browser.')
   }
 }
