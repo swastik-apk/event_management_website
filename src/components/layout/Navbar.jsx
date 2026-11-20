@@ -1,14 +1,21 @@
 import { Menu, Moon, Sun, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useTheme } from '../../hooks/useTheme'
 import Button from '../ui/Button'
 
-const navLinkClasses = ({ isActive }) =>
+const getDesktopNavClasses = (isActive) =>
   `inline-flex whitespace-nowrap shrink-0 items-center border-b-2 py-1 text-sm font-medium transition-colors duration-150 ${
     isActive
       ? 'border-ink text-ink dark:border-white dark:text-white'
       : 'border-transparent text-muted hover:border-line-strong hover:text-ink dark:text-zinc-400 dark:hover:border-night-700 dark:hover:text-white'
+  }`
+
+const getMobileNavClasses = (isActive) =>
+  `inline-flex min-h-11 items-center rounded-control px-3 text-sm font-medium transition-colors ${
+    isActive
+      ? 'bg-subtle text-ink dark:bg-night-800 dark:text-white'
+      : 'text-muted hover:bg-subtle hover:text-ink dark:text-zinc-300 dark:hover:bg-night-800 dark:hover:text-white'
   }`
 
 function ThemeToggleButton() {
@@ -30,6 +37,7 @@ function ThemeToggleButton() {
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('explore')
   const { pathname, hash } = useLocation()
 
   useEffect(() => {
@@ -45,7 +53,84 @@ export default function Navbar() {
     setMobileOpen(false)
   }, [pathname, hash])
 
+  useEffect(() => {
+    if (pathname !== '/') return
+
+    const updateActiveSection = () => {
+      const eventsEl = document.getElementById('events')
+      const aboutEl = document.getElementById('about')
+
+      if (!eventsEl && !aboutEl) {
+        setActiveSection('explore')
+        return
+      }
+
+      const triggerOffset = 180
+      const scrollBottom = window.innerHeight + window.scrollY
+      const pageHeight = document.documentElement.scrollHeight
+
+      if (
+        aboutEl &&
+        (aboutEl.getBoundingClientRect().top <= triggerOffset || scrollBottom >= pageHeight - 40)
+      ) {
+        setActiveSection('about')
+        return
+      }
+
+      if (eventsEl && eventsEl.getBoundingClientRect().top <= triggerOffset) {
+        setActiveSection('events')
+        return
+      }
+
+      setActiveSection('explore')
+    }
+
+    let rafId = null
+    const onScroll = () => {
+      if (rafId !== null) return
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null
+        updateActiveSection()
+      })
+    }
+
+    updateActiveSection()
+    const timerId = window.setTimeout(updateActiveSection, 60)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll, { passive: true })
+
+    return () => {
+      window.clearTimeout(timerId)
+      if (rafId !== null) window.cancelAnimationFrame(rafId)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [pathname, hash])
+
   const closeMenu = () => setMobileOpen(false)
+
+  const handleExploreClick = () => {
+    closeMenu()
+    if (pathname === '/' && !hash) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
+  const handleSectionClick = (sectionId) => {
+    closeMenu()
+    if (pathname === '/' && hash === `#${sectionId}`) {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  let activeNavKey = null
+  if (pathname === '/') {
+    activeNavKey = activeSection
+  } else if (pathname.startsWith('/events/') || pathname.startsWith('/register/')) {
+    activeNavKey = 'events'
+  } else if (pathname === '/registrations') {
+    activeNavKey = 'registrations'
+  }
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-canvas/95 backdrop-blur-md dark:border-night-800 dark:bg-night-950/95">
@@ -54,7 +139,7 @@ export default function Navbar() {
         <Link
           className="inline-flex shrink-0 items-center gap-2.5 whitespace-nowrap rounded-lg text-ink focus-visible:outline-none dark:text-white"
           to="/"
-          onClick={closeMenu}
+          onClick={handleExploreClick}
         >
           <svg
             width="28"
@@ -74,26 +159,39 @@ export default function Navbar() {
           <span className="font-display text-lg font-bold tracking-tight text-accent-500">Event Hub</span>
         </Link>
 
-        {/* Zone 2: Concise single-line navigation links */}
+        {/* Zone 2: Concise single-line navigation links with scroll-spy active underline */}
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary navigation">
-          <NavLink className={navLinkClasses} to="/" end>
-            Explore
-          </NavLink>
+          <div className="flex items-center gap-7">
+            <Link
+              className={getDesktopNavClasses(activeNavKey === 'explore')}
+              to="/"
+              onClick={handleExploreClick}
+            >
+              Explore
+            </Link>
+            <Link
+              className={getDesktopNavClasses(activeNavKey === 'events')}
+              to="/#events"
+              onClick={() => handleSectionClick('events')}
+            >
+              Experiences
+            </Link>
+            <Link
+              className={getDesktopNavClasses(activeNavKey === 'about')}
+              to="/#about"
+              onClick={() => handleSectionClick('about')}
+            >
+              How it works
+            </Link>
+          </div>
+          <span className="ml-2 h-4 w-px bg-line-strong dark:bg-night-700" aria-hidden="true" />
           <Link
-            className="inline-flex shrink-0 whitespace-nowrap items-center border-b-2 border-transparent py-1 text-sm font-medium text-muted transition-colors duration-150 hover:border-line-strong hover:text-ink dark:text-zinc-400 dark:hover:border-night-700 dark:hover:text-white"
-            to="/#events"
+            className={`${getDesktopNavClasses(activeNavKey === 'registrations')} ml-2`}
+            to="/registrations"
+            onClick={closeMenu}
           >
-            Experiences
-          </Link>
-          <Link
-            className="inline-flex shrink-0 whitespace-nowrap items-center border-b-2 border-transparent py-1 text-sm font-medium text-muted transition-colors duration-150 hover:border-line-strong hover:text-ink dark:text-zinc-400 dark:hover:border-night-700 dark:hover:text-white"
-            to="/#about"
-          >
-            How it works
-          </Link>
-          <NavLink className={navLinkClasses} to="/registrations">
             My registrations
-          </NavLink>
+          </Link>
         </nav>
 
         {/* Zone 3: Theme toggle & primary action */}
@@ -125,34 +223,34 @@ export default function Navbar() {
         className={`${mobileOpen ? 'block' : 'hidden'} border-t border-line bg-canvas px-4 pb-5 pt-3 dark:border-night-800 dark:bg-night-950 lg:hidden`}
       >
         <nav className="flex flex-col gap-1" aria-label="Mobile navigation">
-          <NavLink
-            className="inline-flex min-h-11 items-center rounded-control px-3 text-sm font-medium text-ink hover:bg-subtle dark:text-zinc-100 dark:hover:bg-night-800"
+          <Link
+            className={getMobileNavClasses(activeNavKey === 'explore')}
             to="/"
-            onClick={closeMenu}
+            onClick={handleExploreClick}
           >
             Explore
-          </NavLink>
+          </Link>
           <Link
-            className="inline-flex min-h-11 items-center rounded-control px-3 text-sm font-medium text-muted hover:bg-subtle hover:text-ink dark:text-zinc-300 dark:hover:bg-night-800 dark:hover:text-white"
+            className={getMobileNavClasses(activeNavKey === 'events')}
             to="/#events"
-            onClick={closeMenu}
+            onClick={() => handleSectionClick('events')}
           >
             Experiences
           </Link>
           <Link
-            className="inline-flex min-h-11 items-center rounded-control px-3 text-sm font-medium text-muted hover:bg-subtle hover:text-ink dark:text-zinc-300 dark:hover:bg-night-800 dark:hover:text-white"
+            className={getMobileNavClasses(activeNavKey === 'about')}
             to="/#about"
-            onClick={closeMenu}
+            onClick={() => handleSectionClick('about')}
           >
             How it works
           </Link>
-          <NavLink
-            className="inline-flex min-h-11 items-center rounded-control px-3 text-sm font-medium text-muted hover:bg-subtle hover:text-ink dark:text-zinc-300 dark:hover:bg-night-800 dark:hover:text-white"
+          <Link
+            className={getMobileNavClasses(activeNavKey === 'registrations')}
             to="/registrations"
             onClick={closeMenu}
           >
             My registrations
-          </NavLink>
+          </Link>
           <div className="mt-2 border-t border-line pt-3 dark:border-night-800">
             <Button as={Link} to="/#events" size="sm" pill className="w-full" onClick={closeMenu}>
               Find an event
