@@ -84,6 +84,10 @@ npm run build
 npm run preview
 ```
 
+## Deploy to GitHub Pages
+
+The repository includes a GitHub Actions workflow at `.github/workflows/deploy-pages.yml`. Push to `main` or `master` to build and publish the site. In the repository settings, set **Pages → Build and deployment → Source** to **GitHub Actions**. The site uses hash-based routes so event and registration pages work when opened directly or refreshed on GitHub Pages.
+
 ## Routes
 
 - `/` — home and event catalogue
